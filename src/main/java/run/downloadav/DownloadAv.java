@@ -3,6 +3,7 @@ package run.downloadav;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import util.BilibiliHandler;
+import util.FileNameUtil;
 import util.download.DownloadManager;
 import util.response.episodeinfo.Durl;
 import util.response.episodeinfo.EpisodeInfo;
@@ -22,7 +23,7 @@ public class DownloadAv {
 
     public static void main(String[] args) {
         //avid
-        long aid = 44743619;
+        long aid = 4548006;
         //根路径
         String rootPath = "D:\\zBILIBILI";
         downloadAv(aid, rootPath);
@@ -42,6 +43,8 @@ public class DownloadAv {
         int pageAmount = data.getVideos();
         //av标题
         String title = data.getTitle();
+        //替换非法字符
+        title = FileNameUtil.replaceIllegal(title, " ");
         //创建文件夹
         File folder = new File(rootPath, title);
         if (folder.exists() == false) {
@@ -52,6 +55,8 @@ public class DownloadAv {
         for (Pages page : pages) {
             handleSinglePage(aid, page, folder);
         }
+        //关线程池
+        DownloadManager.shutdownExecutorService();
     }
 
     /**
@@ -75,7 +80,7 @@ public class DownloadAv {
         //获取下载地址
         List<Durl> durlList = data.getDurl();
         if (durlList == null || durlList.size() != 1) {
-            throw new RuntimeException("单P有多个durl");
+            throw new RuntimeException("单P有多个durl, aid = " + aid + ", cid = " + cid);
         }
         Durl durl = durlList.get(0);
         //视频下载地址
@@ -96,8 +101,9 @@ public class DownloadAv {
         long size = durl.getSize();
         //文件名
         String filename = page.getPage() + "_" + pageName + "." + format;
+        //替换非法字符
+        filename = FileNameUtil.replaceIllegal(filename, " ");
         //下载单p
         DownloadManager.submitMission(downloadUrl, size, new File(folder, filename), aid);
-        System.out.println("Finished!");
     }
 }

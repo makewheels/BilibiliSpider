@@ -8,6 +8,8 @@ import util.response.episodelist.EpisodeList;
 import util.response.episodelist.Pages;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @date 2019-04-26 19:17
@@ -55,6 +57,15 @@ public class Test {
         System.out.println(downloadUrl);
         System.out.println(size);
         System.out.println(quality);
+    }
+
+    @org.junit.Test
+    public void handleFileNameDeleteIllegal() {
+        String fileName = "weff?/<>";
+        Pattern pattern = Pattern.compile("[\\s\\\\/:\\*\\?\\\"<>\\|]");
+        Matcher matcher = pattern.matcher(fileName);
+        fileName = matcher.replaceAll("-");
+        System.out.println(fileName);
     }
 
 }
