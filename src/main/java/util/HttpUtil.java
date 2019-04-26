@@ -108,9 +108,10 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static String get(String url, Map<String, String> headerMap) {
-//		System.out.println("HttpClient GET (header): " + url);
+		System.out.println("HttpClient GET (header): " + url);
 		CloseableHttpClient client = HttpClients.createDefault();
 		HttpGet httpGet = new HttpGet();
+		httpGet.setHeader("User-Agent", userAgent);
 		Set<String> keySet = headerMap.keySet();
 		for (String key : keySet) {
 			httpGet.setHeader(key, headerMap.get(key));
@@ -144,6 +145,7 @@ public class HttpUtil {
 		CloseableHttpClient client = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(url);
 		Set<String> keySet = headerMap.keySet();
+		httpPost.setHeader("User-Agent", userAgent);
 		for (String key : keySet) {
 			httpPost.setHeader(key, headerMap.get(key));
 		}
