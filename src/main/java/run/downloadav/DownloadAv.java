@@ -97,6 +97,7 @@ public class DownloadAv {
         //文件名
         String filename = page.getPage() + "_" + pageName + "." + format;
         //下载单p
-        DownloadManager.submitMission(downloadUrl, size, new File(folder, filename));
+        DownloadManager.submitMission(downloadUrl, size, new File(folder, filename), aid);
+        System.out.println("Finished!");
     }
 }
