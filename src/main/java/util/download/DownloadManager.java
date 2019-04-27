@@ -69,7 +69,7 @@ public class DownloadManager {
      * @param size
      * @param file
      * @param aid
-     * @param index 碎片索引
+     * @param index       碎片索引
      * @param pageHandler
      */
     public static void downloadFile(String url, long size, File file, long aid, int index, PageHandler pageHandler) {
@@ -87,7 +87,7 @@ public class DownloadManager {
                 headerMap.put("Referer", "https://www.bilibili.com/video/av" + aid);
                 try {
                     InputStream inputStream = getInputStream(url, headerMap);
-                    IOUtils.copy(inputStream, new FileOutputStream(file));
+                    IOUtils.copyLarge(inputStream, new FileOutputStream(file));
                     //下载完成，并且成功时回调
                     pageHandler.onSingleFileDownloadFinish(index, true);
                 } catch (IOException e) {

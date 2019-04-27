@@ -1,15 +1,11 @@
 package util;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,39 +34,17 @@ public class FileUtil {
     /**
      * 合并文件
      *
-     * @param files   碎片
-     * @param outFile 目标文件
+     * @param files 碎片
+     * @param dest  目标文件
      */
-    public static void mergeFiles(File[] files, File outFile) {
-        FileChannel outChannel = null;
+    public static void mergeFiles(File[] files, File dest) {
         try {
-            outChannel = new FileOutputStream(outFile).getChannel();
-            for (File f : files) {
-                Charset charset = Charset.forName("utf-8");
-                CharsetDecoder chdecoder = charset.newDecoder();
-                CharsetEncoder chencoder = charset.newEncoder();
-                FileChannel fc = new FileInputStream(f).getChannel();
-                ByteBuffer bb = ByteBuffer.allocate(1024 * 8);
-                CharBuffer charBuffer = chdecoder.decode(bb);
-                ByteBuffer nbuBuffer = chencoder.encode(charBuffer);
-                while (fc.read(nbuBuffer) != -1) {
-                    bb.flip();
-                    nbuBuffer.flip();
-                    outChannel.write(nbuBuffer);
-                    bb.clear();
-                    nbuBuffer.clear();
-                }
-                fc.close();
+            FileOutputStream fileOutputStream = new FileOutputStream(dest);
+            for (File src : files) {
+                IOUtils.copyLarge(new FileInputStream(src), fileOutputStream);
             }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } finally {
-            try {
-                if (outChannel != null) {
-                    outChannel.close();
-                }
-            } catch (IOException ignore) {
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

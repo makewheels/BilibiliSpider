@@ -1,13 +1,16 @@
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
 import run.downloadav.BilibiliHandler;
-import util.download.DownloadManager;
 import run.downloadav.response.episodeinfo.Data;
 import run.downloadav.response.episodeinfo.Durl;
 import run.downloadav.response.episodeinfo.EpisodeInfo;
 import run.downloadav.response.episodelist.EpisodeList;
 import run.downloadav.response.episodelist.Pages;
+import util.FileUtil;
+import util.MergeFlvFiles;
+import util.download.DownloadManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,9 +25,9 @@ import java.util.regex.Pattern;
 /**
  * @date 2019-04-26 19:17
  */
-public class Test {
+public class RunTest {
 
-    @org.junit.Test
+    @Test
     public void testEpisodeList() {
         EpisodeList episodeList = BilibiliHandler.getEpisodeList(40000000);
         List<Pages> pages = episodeList.getData().getPages();
@@ -33,7 +36,7 @@ public class Test {
         }
     }
 
-    @org.junit.Test
+    @Test
     public void testEpisodeInfo() {
         EpisodeInfo episodeInfo = BilibiliHandler.getSingleEpisodeInfo(44743619, 78328965);
         Data data = episodeInfo.getData();
@@ -67,7 +70,7 @@ public class Test {
         System.out.println(quality);
     }
 
-    @org.junit.Test
+    @Test
     public void handleFileNameDeleteIllegal() {
         String fileName = "weff?/<>";
         Pattern pattern = Pattern.compile("[\\s\\\\/:\\*\\?\\\"<>\\|]");
@@ -76,7 +79,7 @@ public class Test {
         System.out.println(fileName);
     }
 
-    @org.junit.Test
+    @Test
     public void downloadSingleDurl() {
         //https://api.bilibili.com/x/player/playurl?avid=4548006&cid=7375920&qn=112
         Map<String, String> headerMap = new HashMap<>();
@@ -91,4 +94,28 @@ public class Test {
         }
     }
 
+    @Test
+    public void mergeFiles() {
+        String folderPath = "C:\\Users\\Administrator\\Desktop\\新建文件夹\\";
+        File[] files = new File[2];
+        files[0] = new File(folderPath + "1.flv");
+        files[1] = new File(folderPath + "2.flv");
+        File dest = new File(folderPath + "result.flv");
+        FileUtil.mergeFiles(files, dest);
+    }
+
+    @Test
+    public void mergeFlvFiles() {
+        String folderPath = "C:\\Users\\Administrator\\Desktop\\新建文件夹\\";
+        File[] files = new File[2];
+        files[0] = new File(folderPath + "1.flv");
+        files[1] = new File(folderPath + "2.flv");
+        File dest = new File(folderPath + "flvResult.flv");
+        MergeFlvFiles mergeFlvFiles = new MergeFlvFiles();
+        try {
+            mergeFlvFiles.merge(files, dest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

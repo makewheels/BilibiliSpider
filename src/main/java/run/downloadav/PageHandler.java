@@ -3,12 +3,14 @@ package run.downloadav;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import util.FileUtil;
+import util.MergeFlvFiles;
 import util.download.DownloadManager;
 import run.downloadav.response.episodeinfo.Durl;
 import run.downloadav.response.episodeinfo.EpisodeInfo;
 import run.downloadav.response.episodelist.Pages;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -110,12 +112,13 @@ public class PageHandler {
     private File[] pieces;
 
     /**
-     * 单个碎片下载完成时回调
+     * 当单个碎片下载完成时回调
      *
      * @param index     碎片序号
      * @param isSucceed 下载是否成功
      */
     public void onSingleFileDownloadFinish(int index, boolean isSucceed) {
+        //碎片数量
         int length = downloadStateArray.length;
         //如果单p不分碎片，则返回
         if (length == 1) {
@@ -144,17 +147,26 @@ public class PageHandler {
         }
         //如果都成功
         if (isAllsucceed) {
+            //获得文件名
             File pieceFile = pieces[0];
-            //合并碎片
             String fileName = pieceFile.getName();
             fileName = fileName.substring(0, fileName.lastIndexOf("."));
-            FileUtil.mergeFiles(pieces, new File(pieceFile.getParent(), fileName));
+            //合并碎片
+            File desc = new File(pieceFile.getParent(), fileName);
+            MergeFlvFiles mergeFlvFiles = new MergeFlvFiles();
+            try {
+                mergeFlvFiles.merge(pieces, desc);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.err.println("合并flv文件发生异常：" + e.getMessage() + " fileName = " + fileName);
+            }
             //删除所有碎片
             for (File file : pieces) {
+                System.out.println("删除碎片：" + file.getPath());
                 file.delete();
             }
-            //如果有失败的
         } else {
+            //如果有失败的
             System.err.println("单p下载结束，存在失败碎片");
         }
     }
