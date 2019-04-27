@@ -1,8 +1,9 @@
-package util;
+package run.downloadav;
 
 import com.alibaba.fastjson.JSON;
-import util.response.episodeinfo.EpisodeInfo;
-import util.response.episodelist.EpisodeList;
+import util.HttpUtil;
+import run.downloadav.response.episodeinfo.EpisodeInfo;
+import run.downloadav.response.episodelist.EpisodeList;
 
 import java.util.HashMap;
 import java.util.Map;

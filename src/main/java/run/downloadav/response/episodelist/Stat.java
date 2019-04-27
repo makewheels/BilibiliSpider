@@ -1,7 +1,7 @@
 /**
   * Copyright 2019 bejson.com 
   */
-package util.response.episodelist;
+package run.downloadav.response.episodelist;
 
 /**
  * Auto-generated: 2019-04-26 18:42:19

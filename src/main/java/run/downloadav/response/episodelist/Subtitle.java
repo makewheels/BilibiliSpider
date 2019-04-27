@@ -1,7 +1,7 @@
 /**
   * Copyright 2019 bejson.com 
   */
-package util.response.episodelist;
+package run.downloadav.response.episodelist;
 import java.util.List;
 
 /**

@@ -1,15 +1,15 @@
 /**
   * Copyright 2019 bejson.com 
   */
-package util.response.episodelist;
+package run.downloadav.response.episodeinfo;
 
 /**
- * Auto-generated: 2019-04-26 18:42:19
+ * Auto-generated: 2019-04-26 19:59:12
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class EpisodeList {
+public class EpisodeInfo {
 
     private int code;
     private String message;
