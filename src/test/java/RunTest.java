@@ -2,15 +2,15 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
-import run.downloadav.BilibiliHandler;
-import run.downloadav.response.episodeinfo.Data;
-import run.downloadav.response.episodeinfo.Durl;
-import run.downloadav.response.episodeinfo.EpisodeInfo;
-import run.downloadav.response.episodelist.EpisodeList;
-import run.downloadav.response.episodelist.Pages;
+import run.download.av.handler.BilibiliHandler;
+import run.download.av.response.episodeinfo.Data;
+import run.download.av.response.episodeinfo.Durl;
+import run.download.av.response.episodeinfo.EpisodeInfo;
+import run.download.av.response.episodelist.EpisodeList;
+import run.download.av.response.episodelist.Pages;
 import util.FileUtil;
 import util.MergeFlvFiles;
-import util.download.DownloadManager;
+import run.download.av.util.DownloadManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -118,4 +118,5 @@ public class RunTest {
             e.printStackTrace();
         }
     }
+
 }
