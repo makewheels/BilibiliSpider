@@ -1,16 +1,20 @@
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
+import run.download.av.frame.EntranceFrame;
 import run.download.av.handler.BilibiliHandler;
 import run.download.av.response.episodeinfo.Data;
 import run.download.av.response.episodeinfo.Durl;
 import run.download.av.response.episodeinfo.EpisodeInfo;
 import run.download.av.response.episodelist.EpisodeList;
 import run.download.av.response.episodelist.Pages;
+import run.download.av.util.DownloadManager;
 import util.FileUtil;
 import util.MergeFlvFiles;
-import run.download.av.util.DownloadManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,7 +29,7 @@ import java.util.regex.Pattern;
 /**
  * @date 2019-04-26 19:17
  */
-public class RunTest {
+public class JunitTest {
 
     @Test
     public void testEpisodeList() {
@@ -117,6 +121,20 @@ public class RunTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testOkhttp() throws IOException {
+        String url = "https://api.github.com";
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+        Response response = okHttpClient.newCall(request).execute();
+        System.out.println(response.body().string());
+    }
+
+    @Test
+    public void testOkhttpUtils() throws IOException {
+        String url = "https://api.github.com";
     }
 
 }
