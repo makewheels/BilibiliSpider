@@ -10,9 +10,21 @@ import java.awt.*;
  * @date 2019-04-29 22:17
  */
 public class ProgressRenderer implements TableCellRenderer {
+    private JProgressBar progressBar = new JProgressBar();
+
+    public ProgressRenderer( ) {
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(100);
+        progressBar.setStringPainted(true);
+    }
+
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                   boolean hasFocus, int row, int column) {
-        return null;
+    public Component getTableCellRendererComponent(
+            JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        System.out.println("row " + row + " column " + column + " value " + value);
+        if (value != null) {
+            progressBar.setValue((Integer) value);
+        }
+        return progressBar;
     }
 }

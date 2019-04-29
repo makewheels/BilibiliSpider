@@ -1,7 +1,6 @@
 package run.download.av.handler;
 
 import run.download.av.frame.MainFrame;
-import run.download.av.frame.download.Renderer;
 import run.download.av.frame.download.Table;
 import run.download.av.response.episodelist.Data;
 import run.download.av.response.episodelist.EpisodeList;
@@ -79,7 +78,7 @@ public class AvHandler {
             row.add(page.getPart());
             row.add("-");
             row.add(page.getDuration() + "s");
-            row.add("-");
+            row.add(0);
             row.add("-");
             row.add("-");
             row.add("waiting");

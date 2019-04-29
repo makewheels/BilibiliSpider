@@ -34,7 +34,7 @@ public class Table extends JTable {
         leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
         getColumnModel().getColumn(1).setCellRenderer(leftRenderer);
         //进度条列
-//        getColumnModel().getColumn(4).setCellRenderer(new ProgressRenderer());
+        getColumnModel().getColumn(4).setCellRenderer(new ProgressRenderer());
         //表头
         JTableHeader tableHeader = getTableHeader();
         tableHeader.setBackground(Color.CYAN);
@@ -83,7 +83,8 @@ public class Table extends JTable {
     }
 
     public void updateProgress(int rowIndex, long current, long max) {
-
+        int value = (int) (current * 100 / max);
+        model.update(rowIndex, 4, value);
     }
 
     public void updateSpeed(int rowIndex, String text) {

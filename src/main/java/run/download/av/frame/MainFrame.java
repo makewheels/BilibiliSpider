@@ -11,6 +11,8 @@ import java.awt.*;
  * @date 2019-04-27 23:40
  */
 public class MainFrame extends JFrame {
+    private String rootPath = "D:\\zBILIBILI";
+
     private JPanel panel_head = new JPanel();
     private JButton btn_newDownload = FrameUtil.newButton("New Download", 170);
 
@@ -57,11 +59,8 @@ public class MainFrame extends JFrame {
     }
 
     private void newDownload(long aid) {
-        AvHandler avHandler = new AvHandler(aid, "D:\\zBILIBILI", this);
+        AvHandler avHandler = new AvHandler(aid, rootPath, this);
         avHandler.downloadAv();
     }
 
-    public static void main(String[] args) {
-        new MainFrame();
-    }
 }
