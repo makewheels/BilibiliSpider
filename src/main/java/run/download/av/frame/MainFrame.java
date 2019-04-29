@@ -1,6 +1,5 @@
 package run.download.av.frame;
 
-import lombok.Data;
 import run.download.av.handler.AvHandler;
 
 import javax.swing.*;

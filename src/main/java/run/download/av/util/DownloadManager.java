@@ -87,15 +87,17 @@ public class DownloadManager {
                 headerMap.put("Referer", "https://www.bilibili.com/video/av" + aid);
                 try {
                     InputStream inputStream = getInputStream(url, headerMap);
-                    FileOutputStream outputStream = new FileOutputStream(file);
+                    BufferedOutputStream outputStream = new BufferedOutputStream(
+                            new FileOutputStream(file), 1024 * 512);
                     //已下载字节数
                     long downloadBytes = 0;
                     //拷贝字节
-                    byte[] buffer = new byte[1024 * 1024 * 3];
+                    byte[] buffer = new byte[1024 * 8];
                     int bytesRead;
                     while ((bytesRead = inputStream.read(buffer)) != -1) {
                         outputStream.write(buffer, 0, bytesRead);
                         downloadBytes += bytesRead;
+                        //回调进度变化
                         pageHandler.onDownloading(index, downloadBytes);
                     }
                     outputStream.flush();

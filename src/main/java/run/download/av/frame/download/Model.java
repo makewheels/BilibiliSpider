@@ -4,6 +4,8 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.swing.UIManager.get;
+
 /**
  * 下载table数据模型
  *
@@ -26,9 +28,24 @@ public class Model extends AbstractTableModel {
 
     }
 
-    public void update(int rowIndex, int columnIndex, Object obj) {
-        setValueAt(obj, rowIndex, columnIndex);
-        data.get(rowIndex).set(columnIndex, obj);
+    /**
+     * 更新一个cell的内容
+     * 如果内容更新了，返回true
+     * 如果内容没变，返回false
+     *
+     * @param rowIndex
+     * @param columnIndex
+     * @param newObj
+     * @return
+     */
+    public boolean update(int rowIndex, int columnIndex, Object newObj) {
+        List<Object> objects = data.get(rowIndex);
+        if (objects.get(columnIndex).equals(newObj)) {
+            return false;
+        } else {
+            objects.set(columnIndex, newObj);
+            return true;
+        }
     }
 
     @Override

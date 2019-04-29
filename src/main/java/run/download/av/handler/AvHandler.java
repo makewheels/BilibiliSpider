@@ -51,11 +51,6 @@ public class AvHandler {
         //初始化ui
         initUi();
 
-        table.updateSpeed(1, "sodddddd");
-        table.updateVideoLength(2, "fewwefwef");
-        table.updateProgress(1, 20, 56);
-        table.updateTimeRemaining(1, "teimeeee");
-
         //遍历下载每个p
         List<Pages> pages = data.getPages();
         for (int i = 0; i < pages.size(); i++) {

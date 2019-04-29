@@ -3,16 +3,20 @@ package run.download.av.frame.download;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static javax.swing.SwingConstants.CENTER;
+import static javax.swing.SwingConstants.LEFT;
 
 /**
  * 下载table渲染器
  *
  * @date 2019-04-29 09:57
  */
-public class Renderer extends DefaultTableCellRenderer {
+public class Renderer implements TableCellRenderer {
     private List<RowComponent> data = new ArrayList<>();
     private Font font = new Font("黑体", Font.PLAIN, 16);
 

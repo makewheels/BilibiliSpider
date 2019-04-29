@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,6 +39,20 @@ public class FileUtil {
      * @return
      */
     public static String getSizeString(long size) {
-        return size + "bytes";
+        int GB = 1024 * 1024 * 1024;
+        int MB = 1024 * 1024;
+        int KB = 1024;
+        DecimalFormat df = new DecimalFormat("0.0");
+        String resultSize = "";
+        if (size / GB >= 1) {
+            resultSize = df.format(size / (float) GB) + "GB";
+        } else if (size / MB >= 1) {
+            resultSize = df.format(size / (float) MB) + "MB";
+        } else if (size / KB >= 1) {
+            resultSize = df.format(size / (float) KB) + "KB";
+        } else {
+            resultSize = size + "b";
+        }
+        return resultSize;
     }
 }

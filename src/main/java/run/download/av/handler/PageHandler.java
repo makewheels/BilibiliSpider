@@ -147,7 +147,8 @@ public class PageHandler {
         //更新进度条
         table.updateProgress(rowIndex, totalDownloadBytes, totalPageBytes);
         //更新文件大小
-        table.updateSize(rowIndex, "wefewfwwww1");
+        table.updateSize(rowIndex, FileUtil.getSizeString(totalDownloadBytes)
+                + " / " + FileUtil.getSizeString(totalPageBytes));
     }
 
     /**
