@@ -16,6 +16,10 @@ public class Table extends JTable {
     private Model model;
     private Renderer renderer;
 
+    public Renderer getRenderer() {
+        return renderer;
+    }
+
     public Table(List<List<Object>> tableData) {
         //数据
         this.tableData = tableData;

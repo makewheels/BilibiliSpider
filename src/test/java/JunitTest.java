@@ -15,10 +15,7 @@ import run.download.av.util.DownloadManager;
 import util.FileUtil;
 import util.MergeFlvFiles;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,16 +95,6 @@ public class JunitTest {
     }
 
     @Test
-    public void mergeFiles() {
-        String folderPath = "C:\\Users\\Administrator\\Desktop\\新建文件夹\\";
-        File[] files = new File[2];
-        files[0] = new File(folderPath + "1.flv");
-        files[1] = new File(folderPath + "2.flv");
-        File dest = new File(folderPath + "result.flv");
-        FileUtil.mergeFiles(files, dest);
-    }
-
-    @Test
     public void mergeFlvFiles() {
         String folderPath = "C:\\Users\\Administrator\\Desktop\\新建文件夹\\";
         File[] files = new File[2];
@@ -134,6 +121,28 @@ public class JunitTest {
     @Test
     public void testOkhttpUtils() throws IOException {
         String url = "https://api.github.com";
+    }
+
+    @Test
+    public void testDownload() throws IOException {
+        String url = "http://upos-hz-mirrorks3u.acgvideo.com/upgcxcode/65/89/78328965/78328965-1-32.flv?e=ig8euxZM2rNcNbhg7WdVhoMzhbUVhwdEto8g5X10ugNcXBlqNxHxNEVE5XREto8KqJZHUa6m5J0SqE85tZvEuENvNC8xNEVE9EKE9IMvXBvE2ENvNCImNEVEK9GVqJIwqa80WXIekXRE9IMvXBvEuENvNCImNEVEua6m2jIxux0CkF6s2JZv5x0DQJZY2F8SkXKE9IB5QK==&deadline=1556544043&gen=playurl&nbs=1&oi=1885693412&os=ks3u&platform=pc&trid=1be0222de42b4110b9181633d3459ecf&uipk=5&upsig=551c7ef26587b4e6bf25e183921b3588&uparams=e,deadline,gen,nbs,oi,os,platform,trid,uipk";
+        String path = "C:\\Users\\Administrator\\Desktop\\新建文件夹\\r.flv";
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("Range", "bytes=0-");
+        headerMap.put("Referer", "https://www.bilibili.com/");
+        InputStream inputStream = DownloadManager.getInputStream(url, headerMap);
+        BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
+        //已下载字节数
+        long downloadBytes = 0;
+        //拷贝字节
+        byte[] buffer = new byte[1024 * 8];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+            downloadBytes += bytesRead;
+            System.out.println(downloadBytes);
+        }
+        outputStream.flush();
     }
 
 }

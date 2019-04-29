@@ -1,17 +1,12 @@
 package run.download.av.util;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import run.download.av.handler.PageHandler;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +22,7 @@ import java.util.concurrent.Executors;
 public class DownloadManager {
 
     //多线程数量
-    private static int THREAD_AMOUNT = 5;
+    private static int THREAD_AMOUNT = 3;
     private static ExecutorService executorService;
 
     static {
@@ -61,8 +56,7 @@ public class DownloadManager {
         if (statusCode != 200 && statusCode != 206) {
             throw new RuntimeException("http响应码异常, statusCode = " + statusCode + ", url = " + url);
         }
-        HttpEntity entity = response.getEntity();
-        return entity.getContent();
+        return response.getEntity().getContent();
     }
 
     /**
@@ -75,7 +69,8 @@ public class DownloadManager {
      * @param index       碎片索引
      * @param pageHandler
      */
-    public static void downloadFile(String url, long size, File file, long aid, int index, PageHandler pageHandler) {
+    public static void downloadFile(String url, long size, File file, long aid, int index,
+                                    PageHandler pageHandler) {
         //单文件多线程下载，分发任务
 
 //        RandomAccessFile randomAccessFile;
@@ -92,7 +87,19 @@ public class DownloadManager {
                 headerMap.put("Referer", "https://www.bilibili.com/video/av" + aid);
                 try {
                     InputStream inputStream = getInputStream(url, headerMap);
-                    IOUtils.copyLarge(inputStream, new FileOutputStream(file));
+                    FileOutputStream outputStream = new FileOutputStream(file);
+                    //已下载字节数
+                    long downloadBytes = 0;
+                    //拷贝字节
+                    byte[] buffer = new byte[1024 * 1024 * 3];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                        downloadBytes += bytesRead;
+                        pageHandler.onDownloading(index, downloadBytes);
+                    }
+                    outputStream.flush();
+                    pageHandler.onDownloading(index, downloadBytes);
                     //下载完成，并且成功时回调
                     pageHandler.downloadFinishCallback(index, true);
                 } catch (IOException e) {

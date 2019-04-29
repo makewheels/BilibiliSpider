@@ -27,6 +27,7 @@ public class Model extends AbstractTableModel {
     }
 
     public void update(int rowIndex, int columnIndex, Object obj) {
+        setValueAt(obj, rowIndex, columnIndex);
         data.get(rowIndex).set(columnIndex, obj);
     }
 

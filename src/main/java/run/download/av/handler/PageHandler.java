@@ -2,13 +2,14 @@ package run.download.av.handler;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import run.download.av.frame.download.Table;
 import run.download.av.response.episodeinfo.Data;
 import run.download.av.response.episodeinfo.Durl;
 import run.download.av.response.episodeinfo.EpisodeInfo;
+import run.download.av.response.episodelist.Pages;
 import run.download.av.util.DownloadManager;
 import util.FileUtil;
 import util.MergeFlvFiles;
-import run.download.av.response.episodelist.Pages;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,11 +22,17 @@ public class PageHandler {
     private long aid;
     private Pages page;
     private File folder;
+    private Table table;
+    private int rowIndex;
+    //视频格式
+    private String format;
 
-    public PageHandler(long aid, Pages page, File folder) {
+    public PageHandler(long aid, Pages page, File folder, Table table, int rowIndex) {
         this.aid = aid;
         this.page = page;
         this.folder = folder;
+        this.table = table;
+        this.rowIndex = rowIndex;
     }
 
     /**
@@ -44,16 +51,13 @@ public class PageHandler {
             downloadUrl = url;
             //如果没有url，看有没有backupUrl
         } else if (CollectionUtils.isNotEmpty(backupUrlList)) {
-            url = backupUrlList.get(0);
+            downloadUrl = backupUrlList.get(0);
             //如果backupUrl也没有
         } else {
             throw new RuntimeException("没找到下载url");
         }
         return downloadUrl;
     }
-
-    //视频格式
-    String format;
 
     /**
      * 下载单p
@@ -86,6 +90,8 @@ public class PageHandler {
         List<Durl> durlList = data.getDurl();
         //列表大小
         int durlListSize = durlList.size();
+        //初始化碎片的，已下载字节数的数组
+        partDownloadBytes = new long[durlListSize];
         //初始化下载进度
         downloadStateArray = new Boolean[durlListSize];
         //初始化碎片文件
@@ -95,6 +101,8 @@ public class PageHandler {
             Durl durl = durlList.get(i);
             //文件大小
             long fileSize = durl.getSize();
+            //加到总大小里
+            totalPageBytes += fileSize;
             //序号
             int order = durl.getOrder();
             //TODO 补零
@@ -118,6 +126,30 @@ public class PageHandler {
         }
     }
 
+    //单p文件碎片总大小，当然是flv合并之前的
+    private long totalPageBytes;
+    //各碎片已下载字节数
+    private long[] partDownloadBytes;
+
+    /**
+     * 在下载时
+     *
+     * @param partIndex     碎片索引
+     * @param finishedBytes 已下载字节数
+     */
+    public void onDownloading(int partIndex, long finishedBytes) {
+        partDownloadBytes[partIndex] = finishedBytes;
+        //计算所有碎片已下载字节数
+        long totalDownloadBytes = 0;
+        for (long partBytes : partDownloadBytes) {
+            totalDownloadBytes += partBytes;
+        }
+        //更新进度条
+        table.updateProgress(rowIndex, totalDownloadBytes, totalPageBytes);
+        //更新文件大小
+        table.updateSize(rowIndex, "wefewfwwww1");
+    }
+
     /**
      * 碎片下载进度状态
      * 默认都是null，代表还没提交下载任务
@@ -131,10 +163,10 @@ public class PageHandler {
     /**
      * 当单p，或单个碎片，下载完成时回调
      *
-     * @param index     碎片序号
+     * @param partIndex 碎片序号
      * @param isSucceed 下载是否成功
      */
-    public void downloadFinishCallback(int index, boolean isSucceed) {
+    public void downloadFinishCallback(int partIndex, boolean isSucceed) {
         //碎片数量
         int length = downloadStateArray.length;
         //如果单p不分碎片，则返回
@@ -142,7 +174,7 @@ public class PageHandler {
             return;
         }
         //设置下载状态
-        downloadStateArray[index] = isSucceed;
+        downloadStateArray[partIndex] = isSucceed;
         //检查是不是所有的碎片下载任务都有结果了
         for (Boolean downloadState : downloadStateArray) {
             //如果有没结果的任务，则什么都不做
@@ -152,18 +184,18 @@ public class PageHandler {
         }
         //到这里说明所有任务都有结果了
         //检查是否所有碎片都下载成功
-        boolean isAllsucceed = true;
+        boolean isAllSucceed = true;
         for (int i = 0; i < length; i++) {
             for (Boolean downloadState : downloadStateArray) {
                 //只要有没下载成功的，就跳出
                 if (downloadState == false) {
-                    isAllsucceed = false;
+                    isAllSucceed = false;
                     System.err.println("有下载失败碎片: index = " + i + " file = " + pieces[i]);
                 }
             }
         }
         //如果有失败的
-        if (isAllsucceed == false) {
+        if (isAllSucceed == false) {
             System.err.println("单p下载结束，存在下载失败的碎片");
             return;
         }

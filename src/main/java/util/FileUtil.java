@@ -32,19 +32,12 @@ public class FileUtil {
     }
 
     /**
-     * 合并文件
+     * 文件大小：字节数转可读的字符串
      *
-     * @param files 碎片
-     * @param dest  目标文件
+     * @param size
+     * @return
      */
-    public static void mergeFiles(File[] files, File dest) {
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(dest);
-            for (File src : files) {
-                IOUtils.copyLarge(new FileInputStream(src), fileOutputStream);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static String getSizeString(long size) {
+        return size + "bytes";
     }
 }

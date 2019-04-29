@@ -10,7 +10,7 @@ import javax.swing.*;
  * @date 2019-04-29 10:46
  */
 @Data
-public class RowCompoment {
+public class RowComponent {
     private JLabel no;
     private JLabel pageName;
     private JLabel size;
