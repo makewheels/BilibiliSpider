@@ -1,36 +1,42 @@
 package run.download.av.handler;
 
-import run.download.av.frame.DownloadItemPanel;
 import run.download.av.frame.MainFrame;
+import run.download.av.frame.download.Table;
 import run.download.av.response.episodelist.Data;
 import run.download.av.response.episodelist.EpisodeList;
 import run.download.av.response.episodelist.Pages;
 import util.FileUtil;
 
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * av处理器
  */
 public class AvHandler {
-    private static EpisodeList episodeList;
-    private static MainFrame mainFrame;
+    private long aid;
+    private String rootPath;
+    private MainFrame mainFrame;
+    private EpisodeList episodeList;
+
+    public AvHandler(long aid, String rootPath, MainFrame mainFrame) {
+        this.aid = aid;
+        this.rootPath = rootPath;
+        this.mainFrame = mainFrame;
+    }
 
     /**
      * 下载av
-     *
-     * @param aid
-     * @param rootPath
-     * @param mmainFrame
      */
-    public static void downloadAv(long aid, String rootPath, MainFrame mmainFrame) {
+    public void downloadAv() {
         //获取每集列表信息
         episodeList = BilibiliHandler.getEpisodeList(aid);
         Data data = episodeList.getData();
+        //初始化ui
+        initUi();
+
         //p总数
         int pageAmount = data.getVideos();
         //av标题
@@ -42,28 +48,42 @@ public class AvHandler {
         if (folder.exists() == false) {
             folder.mkdirs();
         }
-        mainFrame = mmainFrame;
-        //初始化ui
-        initUi();
+
         //关线程池
 //        DownloadManager.shutdownExecutorService();
     }
 
     //初始化ui
-    private static void initUi() {
-        String[] tableHeader = new String[]{"few", "ewga", "ewg", "gew", "ewfg"};
-        JTable table = new JTable(new Object[][]{}, tableHeader);
-        table.setBounds(10, 200, 700, 400);
+    private void initUi() {
+        //表格数据
+        List<List<Object>> tableData = new ArrayList<>();
         //遍历处理每个p
         Data data = episodeList.getData();
         List<Pages> pages = data.getPages();
         for (Pages page : pages) {
 //            PageHandler pageHandler = new PageHandler(aid, page, folder);
 //            pageHandler.downloadPage();
-            DownloadItemPanel downloadItemPanel = new DownloadItemPanel(page.getPage(), page.getPart());
-            table.add(downloadItemPanel);
+            //一行
+            ArrayList<Object> row = new ArrayList<>();
+            row.add(page.getPage());
+            row.add(page.getPart());
+            row.add("-");
+            row.add(page.getDuration() + "s");
+            row.add("-");
+            row.add("-");
+            row.add("-");
+            row.add("waiting");
+            tableData.add(row);
         }
-        mainFrame.add(table);
+        //表格
+        Table table = new Table(tableData);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(30, 65, 1230, 660);
+
+        table.updateProgress(2, 40, 139);
+
+        //加入主窗体
+        mainFrame.add(scrollPane);
     }
 
 }

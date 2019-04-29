@@ -30,7 +30,6 @@ public class MainFrame extends JFrame {
         panel_head.setBounds(0, 0, 500, 50);
         panel_head.setBackground(Color.GREEN);
         panel_head.add(btn_newDownload);
-        panel_head.add(FrameUtil.newButton("New Download", 170));
         add(panel_head);
     }
 
@@ -43,10 +42,15 @@ public class MainFrame extends JFrame {
                         "please input AID", "4548006");
                 if (input != null) {
                     long aid = Long.parseLong(input);
-                    AvHandler.downloadAv(aid, "D:\\zBILIBILI",MainFrame.this);
+                    newDownload(aid);
                 }
             }
         });
+    }
+
+    private void newDownload(long aid) {
+        AvHandler avHandler = new AvHandler(aid, "D:\\zBILIBILI", MainFrame.this);
+        avHandler.downloadAv();
     }
 
     private void initFrame() {
@@ -62,6 +66,8 @@ public class MainFrame extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+
+        newDownload(4548006);
     }
 
     public static void main(String[] args) {
