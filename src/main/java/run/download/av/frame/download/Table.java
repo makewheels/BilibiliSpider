@@ -15,7 +15,6 @@ import java.util.List;
 public class Table extends JTable {
     private List<List<Object>> tableData;
     private Model model;
-    private Renderer renderer;
 
     public Table(List<List<Object>> tableData) {
         //表格全局字体
@@ -26,9 +25,6 @@ public class Table extends JTable {
         model = new Model(tableData);
         setModel(model);
         //渲染
-//        renderer = new Renderer(tableData);
-//        setDefaultRenderer(Object.class, renderer);
-
         //其它居中
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -38,7 +34,7 @@ public class Table extends JTable {
         leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
         getColumnModel().getColumn(1).setCellRenderer(leftRenderer);
         //进度条列
-        getColumnModel().getColumn(4).setCellRenderer(new ProgressRenderer());
+//        getColumnModel().getColumn(4).setCellRenderer(new ProgressRenderer());
         //表头
         JTableHeader tableHeader = getTableHeader();
         tableHeader.setBackground(Color.CYAN);
@@ -50,7 +46,7 @@ public class Table extends JTable {
         TableColumnModel columnModel = getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(50);
         columnModel.getColumn(1).setPreferredWidth(387);
-        columnModel.getColumn(2).setPreferredWidth(160);
+        columnModel.getColumn(2).setPreferredWidth(165);
         columnModel.getColumn(3).setPreferredWidth(80);
         columnModel.getColumn(4).setPreferredWidth(250);
         columnModel.getColumn(5).setPreferredWidth(100);
@@ -87,7 +83,7 @@ public class Table extends JTable {
     }
 
     public void updateProgress(int rowIndex, long current, long max) {
-        renderer.updateProgress(rowIndex, (int) current, (int) max);
+
     }
 
     public void updateSpeed(int rowIndex, String text) {

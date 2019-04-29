@@ -89,7 +89,7 @@ public class AvHandler {
         //表格
         table = new Table(tableData);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(30, 65, 1230, 660);
+        scrollPane.setBounds(30, 65, 1235, 665);
 
         //加入主窗体
         mainFrame.add(scrollPane);

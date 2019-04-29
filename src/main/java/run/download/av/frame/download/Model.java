@@ -4,8 +4,6 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.swing.UIManager.get;
-
 /**
  * 下载table数据模型
  *
@@ -35,15 +33,15 @@ public class Model extends AbstractTableModel {
      *
      * @param rowIndex
      * @param columnIndex
-     * @param newObj
+     * @param newValue
      * @return
      */
-    public boolean update(int rowIndex, int columnIndex, Object newObj) {
+    public boolean update(int rowIndex, int columnIndex, Object newValue) {
         List<Object> objects = data.get(rowIndex);
-        if (objects.get(columnIndex).equals(newObj)) {
+        if (objects.get(columnIndex).equals(newValue)) {
             return false;
         } else {
-            objects.set(columnIndex, newObj);
+            objects.set(columnIndex, newValue);
             return true;
         }
     }
