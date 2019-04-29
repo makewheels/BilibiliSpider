@@ -82,6 +82,8 @@ public class DownloadManager {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
+                //正式开始下载，设置ui界面中的状态为downloading
+                pageHandler.onStartDownload();
                 Map<String, String> headerMap = new HashMap<>();
                 headerMap.put("Range", "bytes=0-");
                 headerMap.put("Referer", "https://www.bilibili.com/video/av" + aid);
@@ -103,11 +105,11 @@ public class DownloadManager {
                     outputStream.flush();
                     pageHandler.onDownloading(index, downloadBytes);
                     //下载完成，并且成功时回调
-                    pageHandler.downloadFinishCallback(index, true);
+                    pageHandler.downloadPartFinishCallback(index, true);
                 } catch (IOException e) {
                     e.printStackTrace();
                     //发生错误时回调
-                    pageHandler.downloadFinishCallback(index, false);
+                    pageHandler.downloadPartFinishCallback(index, false);
                 }
             }
         });

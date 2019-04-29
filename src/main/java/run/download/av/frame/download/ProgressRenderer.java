@@ -21,7 +21,6 @@ public class ProgressRenderer implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(
             JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        System.out.println("row " + row + " column " + column + " value " + value);
         if (value != null) {
             progressBar.setValue((Integer) value);
         }

@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
     }
 
     private void addComponent() {
-        panel_head.setBounds(0, 0, 400, 50);
+        panel_head.setBounds(0, 10, 400, 50);
         panel_head.add(btn_newDownload);
         add(panel_head);
     }
@@ -35,7 +35,12 @@ public class MainFrame extends JFrame {
                     "please input AID", "4548006");
             if (input != null) {
                 long aid = Long.parseLong(input);
-                btn_newDownload.setEnabled(false);
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        btn_newDownload.setEnabled(false);
+                    }
+                });
                 newDownload(aid);
             }
         });
@@ -54,8 +59,6 @@ public class MainFrame extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
-
-        newDownload(4548006);
     }
 
     private void newDownload(long aid) {

@@ -64,6 +64,49 @@ public class AvHandler {
     //表格
     private Table table;
 
+    /**
+     * 时间转换
+     * 将秒转换为可读时间
+     * 例如：69 -> 1:09
+     *
+     * @param duration
+     */
+    private String getTimeString(int duration) {
+        //小于一分钟
+        if (duration < 60) {
+            if (duration <= 9) {
+                return "0:0" + duration;
+            } else {
+                return "0:" + duration;
+            }
+        } else {
+            int second = duration % 60;
+            int minute = duration / 60;
+            int hour = duration / 60 / 60;
+            //一分钟到一小时
+            if (duration < 60 * 60) {
+                if (second <= 9) {
+                    return minute + ":0" + second;
+                } else {
+                    return minute + ":" + second;
+                }
+            } else {
+                //大于一小时
+                String time = "";
+                time += hour + ":";
+                if (minute <= 9) {
+                    time += "0";
+                }
+                time += minute + ":";
+                if (minute <= 9) {
+                    time += "0";
+                }
+                time += second;
+                return time;
+            }
+        }
+    }
+
     //初始化ui
     private void initUi() {
         //表格数据
@@ -77,7 +120,7 @@ public class AvHandler {
             row.add(page.getPage());
             row.add(page.getPart());
             row.add("-");
-            row.add(page.getDuration() + "s");
+            row.add(getTimeString(page.getDuration()));
             row.add(0);
             row.add("-");
             row.add("-");

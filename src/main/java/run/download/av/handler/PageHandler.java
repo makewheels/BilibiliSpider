@@ -63,6 +63,8 @@ public class PageHandler {
      * 下载单p
      */
     public void downloadPage() {
+        //设置ui状态为准备中
+        table.updateState(rowIndex, "preparing");
         long cid = page.getCid();
         //单p名
         String pageName = page.getPart();
@@ -121,9 +123,21 @@ public class PageHandler {
             File file = new File(folder, fileName);
             //添加碎片文件到数组，以备回调
             pieces[i] = file;
+            //提交下载任务，更新ui状态为waiting
+            table.updateState(rowIndex, "waiting");
+            //更新ui中的文件大小
+            table.updateSize(rowIndex, FileUtil.getSizeString(totalPageBytes));
             //下载碎片
             DownloadManager.downloadFile(url, fileSize, file, aid, i, this);
         }
+    }
+
+    /**
+     * 在下载任务得到执行，正式开始下载时回调
+     */
+    public void onStartDownload() {
+        //更新ui状态为downloading
+        table.updateState(rowIndex, "downloading");
     }
 
     //单p文件碎片总大小，当然是flv合并之前的
@@ -167,13 +181,17 @@ public class PageHandler {
      * @param partIndex 碎片序号
      * @param isSucceed 下载是否成功
      */
-    public void downloadFinishCallback(int partIndex, boolean isSucceed) {
+    public void downloadPartFinishCallback(int partIndex, boolean isSucceed) {
         //碎片数量
         int length = downloadStateArray.length;
         //如果单p不分碎片，则返回
         if (length == 1) {
+            //更新ui状态为finished
+            table.updateState(rowIndex, "finished");
             return;
         }
+        //设置ui状态为合成中
+        table.updateState(rowIndex, "merging");
         //设置下载状态
         downloadStateArray[partIndex] = isSucceed;
         //检查是不是所有的碎片下载任务都有结果了
@@ -225,6 +243,8 @@ public class PageHandler {
             System.out.println("删除碎片：" + file.getPath());
             file.delete();
         }
+        //更新ui状态为finished
+        table.updateState(rowIndex, "finished");
     }
 
 }
