@@ -190,8 +190,6 @@ public class PageHandler {
             table.updateState(rowIndex, "finished");
             return;
         }
-        //设置ui状态为合成中
-        table.updateState(rowIndex, "merging");
         //设置下载状态
         downloadStateArray[partIndex] = isSucceed;
         //检查是不是所有的碎片下载任务都有结果了
@@ -225,6 +223,8 @@ public class PageHandler {
         fileName = fileName.substring(0, fileName.lastIndexOf("."));
         //合并碎片
         File desc = new File(pieceFile.getParent(), fileName);
+        //设置ui状态为合成中
+        table.updateState(rowIndex, "merging");
         //如果是flv格式
         if (format.equals("flv")) {
             MergeFlvFiles mergeFlvFiles = new MergeFlvFiles();
